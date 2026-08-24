@@ -6,6 +6,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -25,7 +26,7 @@ public class SummaryService {
     @Value("${spring.ai.openai.base-url:https://api.groq.com/openai}")
     private String baseUrl;
 
-    @Value("${spring.ai.openai.chat.model:llama3-70b-8192}")
+    @Value("${spring.ai.openai.chat.model:openai/gpt-oss-120b}")
     private String model;
 
     public SummaryService(RestTemplate restTemplate) {
@@ -86,6 +87,12 @@ public class SummaryService {
             }
 
             return String.valueOf(message.get("content"));
+        } catch (HttpStatusCodeException exception) {
+            String providerMessage = exception.getResponseBodyAsString();
+            throw new AudioProcessingException(
+                    "Summary provider rejected the request: " + providerMessage,
+                    exception
+            );
         } catch (RestClientException exception) {
             throw new AudioProcessingException("Failed to generate meeting summary.", exception);
         }
