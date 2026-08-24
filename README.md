@@ -18,7 +18,7 @@ ClearMeet turns a meeting recording into a transcript and an actionable AI summa
 - A Groq API key
 - Maven Wrapper support, included in `SpringAiProject`
 
-Video:  
+Video Link: https://github.com/user-attachments/assets/d825a761-513d-49f6-94cf-de517388a7c6  
 
 
 
